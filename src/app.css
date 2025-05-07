@@ -1,16 +1,53 @@
+@font-face {
+  font-family: inter;
+  src: url("/fonts/Inter-VariableFont_opsz,wght.ttf");
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-stack: inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --c-bg: #f6f6f6;
+  --c-white: #ffffff;
+  --c-gray: #d0d0d1;
+  --c-black: #000000;
+  --c-black-accent: #404244;
+  --c-red: #ff829d;
+  --c-red-accent: #3b0a28;
+  --c-green: #6fcdcd;
+  --c-green-accent: #0a3d3d;
+  --c-yellow: #ffd778;
+  --c-yellow-accent: #4a3200;
+
+  font-size: 62.5%;
+
+  --fs-title: 4rem;
+  --fs-heading: 4rem;
+  --fs-subheading: 3.2rem;
+  --fs-body-large: 2.4rem;
+  --fs-body: 1.8rem;
+  --fs-small: 1.4rem;
+
+  --p-tiny: 0.4rem;
+  --p-small: 0.8rem;
+  --p-medium: 1.2rem;
+  --p-large: 2.4rem;
+  --p-huge: 4rem;
+
+  font-family: var(--font-stack);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--c-black-accent);
+  background-color: var(--c-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  color: var(--c-black-accent);
 }
 
 a {
@@ -26,8 +63,6 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -40,9 +75,6 @@ h1 {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -63,17 +95,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
