@@ -3,13 +3,20 @@
 
   type props = {
     children: Snippet;
+    onInput: (v: string) => void;
   };
-  let { children }: props = $props();
+  let { children, onInput }: props = $props();
+
+  let value: string = $state("");
+
+  $effect(() => {
+    onInput(value);
+  });
 </script>
 
 <div>
   {@render children()}
-  <input type="text" />
+  <input type="text" bind:value />
 </div>
 
 <style>

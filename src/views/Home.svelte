@@ -9,13 +9,23 @@
   const displayRuns = $derived(
     applyMiltipleFiltersAndSortings($runs, $filters, $sortings)
   );
+
+  const onInput = (searchString: string) => {
+    filters.update((f) => {
+      f["searchString"] = (r) => {
+        if (!searchString) return true;
+        return r.index.toString() === searchString;
+      };
+      return f;
+    });
+  };
 </script>
 
 <section>
   <h1>Active Runs</h1>
   <div class="controls">
     <SortAndFilter />
-    <Search>
+    <Search {onInput}>
       <span class="run">Run: </span>
     </Search>
   </div>

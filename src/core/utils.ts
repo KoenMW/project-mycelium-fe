@@ -2,18 +2,18 @@ import type { filterType, sortingType } from "./types";
 
 export const applyMiltipleFiltersAndSortings = <T>(
   array: T[],
-  filters: filterType<T>[],
-  sortings: sortingType<T>[]
+  filters: Record<string, filterType<T>>,
+  sortings: Record<string, sortingType<T>>
 ): T[] => {
   let result: T[] = array;
 
-  filters.forEach((filter) => {
-    result = result.filter(filter);
-  });
+  for (const filterKey in filters) {
+    result = result.filter(filters[filterKey]);
+  }
 
-  sortings.forEach((sorting) => {
-    result = result.sort(sorting);
-  });
+  for (const sortKey in sortings) {
+    result = result.sort(sortings[sortKey]);
+  }
 
   return result;
 };

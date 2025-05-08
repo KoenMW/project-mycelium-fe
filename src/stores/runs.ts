@@ -4,8 +4,8 @@ import { maxDays } from "../core/consts";
 
 export const runs = writable<Run[]>([]);
 
-export const filters = writable<filterType<Run>[]>([]);
-export const sortings = writable<sortingType<Run>[]>([]);
+export const filters = writable<Record<string, filterType<Run>>>({});
+export const sortings = writable<Record<string, sortingType<Run>>>({});
 
 const runsInit = () => {
   const r = [];
