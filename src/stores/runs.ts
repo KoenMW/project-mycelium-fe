@@ -1,0 +1,24 @@
+import { writable } from "svelte/store";
+import type { filterType, Run, sortingType } from "../core/types";
+import { maxDays } from "../core/consts";
+
+export const runs = writable<Run[]>([]);
+
+export const filters = writable<filterType<Run>[]>([]);
+export const sortings = writable<sortingType<Run>[]>([]);
+
+const runsInit = () => {
+  const r = [];
+  for (let i = 0; i < maxDays; i++) {
+    const randomDevians = Math.round(Math.random() * (maxDays / 2 - i));
+    r.push({
+      index: i + 1,
+      currentDay: maxDays - i,
+      estimatedDay:
+        Math.random() < 0.7 ? maxDays - i : maxDays - i - randomDevians,
+    });
+  }
+  runs.set(r);
+};
+
+runsInit();

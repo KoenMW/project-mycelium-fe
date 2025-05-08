@@ -1,27 +1,14 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import RunOverview from "../components/RunOverview.svelte";
   import Search from "../components/Search.svelte";
   import SortAndFilter from "../components/SortAndFilter.svelte";
-  import type { Run as RunType } from "../core/types";
   import Run from "../components/Run.svelte";
-  import { maxDays } from "../core/consts";
+  import { filters, runs, sortings } from "../stores/runs";
+  import { applyMiltipleFiltersAndSortings } from "../core/utils";
 
-  const runs: RunType[] = $state([]);
-
-  onMount(() => {
-    for (let i = 0; i < maxDays; i++) {
-      const randomDevians = Math.round(Math.random() * (maxDays / 2 - i));
-      runs.push({
-        index: i + 1,
-        currentDay: maxDays - i,
-        estimatedDay:
-          Math.random() < 0.7 ? maxDays - i : maxDays - i - randomDevians,
-      });
-    }
-
-    console.log(runs);
-  });
+  const displayRuns = $derived(
+    applyMiltipleFiltersAndSortings($runs, $filters, $sortings)
+  );
 </script>
 
 <section>
@@ -32,9 +19,9 @@
       <span class="run">Run: </span>
     </Search>
   </div>
-  <RunOverview {runs} />
+  <RunOverview runs={displayRuns} />
   <section class="runs">
-    {#each runs as run}
+    {#each displayRuns as run}
       <Run {run} />
     {/each}
   </section>
