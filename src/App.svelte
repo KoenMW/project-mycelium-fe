@@ -18,5 +18,6 @@
     padding: var(--p);
     width: calc(100dvw - (var(--p) * 2));
     height: calc(100dvh - (var(--p) * 2));
+    overflow: auto;
   }
 </style>

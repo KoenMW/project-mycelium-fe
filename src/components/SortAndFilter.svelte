@@ -6,12 +6,12 @@
 <style>
   div {
     background-color: var(--c-white);
-    padding: 1rem;
+    padding: var(--p-medium);
     display: flex;
     flex-direction: column;
     min-width: 10rem;
     align-items: start;
-    border-radius: 1rem;
+    border-radius: var(--p-medium);
     font-weight: bold;
   }
 

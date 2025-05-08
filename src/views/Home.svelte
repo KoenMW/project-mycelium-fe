@@ -1,7 +1,27 @@
-<script>
+<script lang="ts">
+  import { onMount } from "svelte";
+  import RunOverview from "../components/RunOverview.svelte";
   import Search from "../components/Search.svelte";
   import SortAndFilter from "../components/SortAndFilter.svelte";
-  import { goTo } from "../stores/router";
+  import type { Run as RunType } from "../core/types";
+  import Run from "../components/Run.svelte";
+  import { maxDays } from "../core/consts";
+
+  const runs: RunType[] = $state([]);
+
+  onMount(() => {
+    for (let i = 0; i < maxDays; i++) {
+      const randomDevians = Math.round(Math.random() * (maxDays / 2 - i));
+      runs.push({
+        index: i + 1,
+        currentDay: maxDays - i,
+        estimatedDay:
+          Math.random() < 0.7 ? maxDays - i : maxDays - i - randomDevians,
+      });
+    }
+
+    console.log(runs);
+  });
 </script>
 
 <section>
@@ -12,6 +32,12 @@
       <span class="run">Run: </span>
     </Search>
   </div>
+  <RunOverview {runs} />
+  <section class="runs">
+    {#each runs as run}
+      <Run {run} />
+    {/each}
+  </section>
 </section>
 
 <style>
@@ -19,12 +45,13 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    gap: var(--p-medium);
   }
 
   .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--p-medium);
     width: 100%;
   }
 
@@ -42,5 +69,12 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+  }
+
+  .runs {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 </style>

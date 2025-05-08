@@ -15,8 +15,8 @@
 <style>
   div {
     background-color: var(--c-white);
-    padding: 1rem;
-    border-radius: 1rem;
+    padding: var(--p-medium);
+    border-radius: var(--p-medium);
     display: flex;
     height: min-content;
     align-items: center;
