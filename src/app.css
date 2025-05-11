@@ -96,3 +96,15 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.red {
+  background-color: var(--c-red);
+}
+
+.yellow {
+  background-color: var(--c-yellow);
+}
+
+.green {
+  background-color: var(--c-green);
+}

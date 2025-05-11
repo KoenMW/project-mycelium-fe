@@ -1,6 +1,7 @@
 <script lang="ts">
   import { maxDays } from "../core/consts";
   import type { Performance, Run } from "../core/types";
+  import { calcPerformance } from "../core/utils";
 
   type props = {
     run: Run;
@@ -14,13 +15,7 @@
     Underperforming: "red",
   };
 
-  let performance: Performance = $derived(
-    run.currentDay === run.estimatedDay
-      ? "On Target"
-      : Math.abs(run.currentDay - run.estimatedDay) === 1
-        ? "Near Target"
-        : "Underperforming"
-  );
+  let performance: Performance = $derived(calcPerformance(run));
 </script>
 
 <div class="container {performanceClasses[performance]}">
@@ -58,24 +53,12 @@
     margin: 0;
   }
 
-  .green {
-    background-color: var(--c-green);
-  }
-
   .green h3 {
     color: var(--c-green-accent);
   }
 
-  .yellow {
-    background-color: var(--c-yellow);
-  }
-
   .yellow h3 {
     color: var(--c-yellow-accent);
-  }
-
-  .red {
-    background-color: var(--c-red);
   }
 
   .red h3 {

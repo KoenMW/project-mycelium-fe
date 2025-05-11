@@ -11,12 +11,11 @@
   );
 
   const onInput = (searchString: string) => {
-    filters.update((f) => {
-      f["searchString"] = (r) => {
+    filters.set({
+      searchString: (r) => {
         if (!searchString) return true;
         return r.index.toString() === searchString;
-      };
-      return f;
+      },
     });
   };
 </script>

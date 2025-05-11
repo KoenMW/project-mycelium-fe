@@ -1,4 +1,4 @@
-import type { filterType, sortingType } from "./types";
+import type { filterType, Performance, Run, sortingType } from "./types";
 
 export const applyMiltipleFiltersAndSortings = <T>(
   array: T[],
@@ -16,4 +16,12 @@ export const applyMiltipleFiltersAndSortings = <T>(
   }
 
   return result;
+};
+
+export const calcPerformance = (run: Run): Performance => {
+  return run.currentDay === run.estimatedDay
+    ? "On Target"
+    : Math.abs(run.currentDay - run.estimatedDay) === 1
+    ? "Near Target"
+    : "Underperforming";
 };
