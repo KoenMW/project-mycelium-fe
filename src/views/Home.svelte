@@ -24,7 +24,7 @@
   <h1>Active Runs</h1>
   <div class="controls">
     <SortAndFilter />
-    <Search {onInput}>
+    <Search {onInput} validChars="0123456789">
       <span class="run">Run: </span>
     </Search>
   </div>

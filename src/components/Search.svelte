@@ -1,16 +1,41 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  type props = {
+  type requiredProps = {
     children: Snippet;
     onInput: (v: string) => void;
   };
-  let { children, onInput }: props = $props();
+
+  type partialProps = Partial<{
+    validChars: string;
+  }>;
+
+  let {
+    children,
+    onInput,
+    validChars = "",
+  }: requiredProps & partialProps = $props();
 
   let value: string = $state("");
 
   $effect(() => {
     onInput(value);
+  });
+
+  const checkAllChars = (input: string): boolean => {
+    for (let i = 0; i < input.length; i++) {
+      if (!validChars.includes(input[i])) return false;
+    }
+    return true;
+  };
+
+  $effect(() => {
+    if (!validChars || checkAllChars(value)) return;
+    let filtered = "";
+    for (let i = 0; i < value.length; i++) {
+      if (validChars.includes(value[i])) filtered += value[i];
+    }
+    value = filtered;
   });
 </script>
 
