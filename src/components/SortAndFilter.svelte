@@ -21,6 +21,10 @@
     });
     selected = performance;
   };
+
+  $effect(() => {
+    if (!$filters["performance"]) selected = "";
+  });
 </script>
 
 <div>
