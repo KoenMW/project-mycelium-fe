@@ -22,7 +22,7 @@
   <h3>{performance}</h3>
   <div class="detail-container">
     <div class="detail">
-      <span>Run</span>
+      <span>Sample</span>
       <span class="large">{run.index}</span>
     </div>
     <div class="detail">

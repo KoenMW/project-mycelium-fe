@@ -25,7 +25,7 @@
   <div class="controls">
     <SortAndFilter />
     <Search {onInput} validChars="0123456789">
-      <span class="run">Run: </span>
+      <span class="run">Sample: </span>
     </Search>
   </div>
   <RunOverview runs={displayRuns} />
