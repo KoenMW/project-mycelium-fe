@@ -41,6 +41,10 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: fit-content;
+    background-color: var(--c-bg);
+    padding: var(--p-medium);
+    border-radius: var(--p-medium);
+
+    box-shadow: 0 1rem 1rem 0.5rem var(--c-black-accent);
   }
 </style>

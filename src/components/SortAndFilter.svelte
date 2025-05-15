@@ -27,7 +27,7 @@
   });
 </script>
 
-<div>
+<div class="container">
   <span
     >Sort
     <HoverPopup>some sort options</HoverPopup>
@@ -54,7 +54,7 @@
 </div>
 
 <style>
-  div {
+  .container {
     background-color: var(--c-white);
     padding: var(--p-medium);
     display: flex;
