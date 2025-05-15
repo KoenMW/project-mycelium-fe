@@ -33,3 +33,14 @@ export const calcPerformanceNumber = (run: Run): 0 | 1 | 2 => {
     ? 1
     : 2;
 };
+
+const characters =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+export const generateId = (length: number = 10) => {
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};

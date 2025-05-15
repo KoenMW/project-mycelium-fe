@@ -1,40 +1,34 @@
 <script lang="ts">
-  import * as d3 from "d3";
-  import { on } from "svelte/events";
   import { drawDonut } from "../core/d3";
-  import type { derived } from "svelte/store";
   import { onMount } from "svelte";
 
-  type props = {
+  type Props = {
     onTarget: number;
     nearTarget: number;
     underperformed: number;
   };
 
-  const { onTarget, nearTarget, underperformed }: props = $props();
+  let { onTarget, nearTarget, underperformed }: Props = $props();
 
   let donut: HTMLDivElement;
 
+  let update: ((value: number[]) => void) | null = $state(null);
+
+  $effect(() => {
+    if (update) update([onTarget, nearTarget, underperformed]);
+  });
+
   onMount(() => {
-    const { svg, change } = drawDonut([
-      { apples: onTarget, oranges: 200 },
-      { apples: nearTarget, oranges: 200 },
-      { apples: underperformed, oranges: 200 },
-    ]);
+    const { svg, change } = drawDonut([onTarget, nearTarget, underperformed]);
+
+    update = change;
 
     const chart = svg.node();
     if (chart) donut.appendChild(chart);
-
-    let test = true;
-
-    setInterval(() => {
-      change(test ? "apples" : "oranges");
-      test = !test;
-    }, 2000);
   });
 </script>
 
 <h1>
-  donut chart 🍩
+  donut chart
   <div class="donut-container" bind:this={donut}></div>
 </h1>
