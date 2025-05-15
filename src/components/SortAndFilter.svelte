@@ -1,36 +1,73 @@
 <script lang="ts">
   import type { Performance } from "../core/types";
-  import { calcPerformance } from "../core/utils";
-  import { filters } from "../stores/runs";
+  import { calcPerformance, calcPerformanceNumber } from "../core/utils";
+  import { filters, sortings } from "../stores/runs";
   import HoverPopup from "./HoverPopup.svelte";
 
-  let selected = $state<Performance | "">("");
+  let selectedPerformanceFilter = $state<Performance | "">("");
 
-  const select = (performance: Performance) => {
-    if (selected === performance) {
+  let selectedPerformanceSort = $state<"ascending" | "descending" | "">("");
+
+  const selectPerformanceFilter = (performance: Performance) => {
+    if (selectedPerformanceFilter === performance) {
       filters.update((f) => {
         f["performance"] = () => true;
         return f;
       });
-      selected = "";
+      selectedPerformanceFilter = "";
       return;
+      calcPerformanceNumber;
     }
     filters.update((f) => {
       f["performance"] = (r) => calcPerformance(r) === performance;
       return f;
     });
-    selected = performance;
+    selectedPerformanceFilter = performance;
+  };
+
+  const selectPerformanceSort = (direction: "ascending" | "descending") => {
+    if (selectedPerformanceSort === direction) {
+      sortings.update((s) => {
+        delete s["performance"];
+        return s;
+      });
+      selectedPerformanceSort = "";
+      return;
+    }
+    sortings.update((s) => {
+      s["performance"] = (a, b) => {
+        return direction === "ascending"
+          ? calcPerformanceNumber(b) - calcPerformanceNumber(a)
+          : calcPerformanceNumber(a) - calcPerformanceNumber(b);
+      };
+      return s;
+    });
+    selectedPerformanceSort = direction;
   };
 
   $effect(() => {
-    if (!$filters["performance"]) selected = "";
+    if (!$filters["performance"]) selectedPerformanceFilter = "";
   });
 </script>
 
 <div class="container">
   <span
     >Sort
-    <HoverPopup>some sort options</HoverPopup>
+    <HoverPopup>
+      <div class="performance">
+        performance: <button
+          class={selectedPerformanceSort === "ascending" ? "selected" : ""}
+          onclick={() => selectPerformanceSort("ascending")}
+        >
+          ascending
+        </button><button
+          class={selectedPerformanceSort === "descending" ? "selected" : ""}
+          onclick={() => selectPerformanceSort("descending")}
+        >
+          descending
+        </button>
+      </div>
+    </HoverPopup>
   </span>
   <span
     >Filter
@@ -38,14 +75,20 @@
       ><div class="filters">
         <div class="performance">
           performance: <button
-            class="red {selected === 'Underperforming' && 'selected'}"
-            onclick={() => select("Underperforming")}>Underperforming</button
+            class="red {selectedPerformanceFilter === 'Underperforming' &&
+              'selected'}"
+            onclick={() => selectPerformanceFilter("Underperforming")}
+            >Underperforming</button
           ><button
-            class="yellow {selected === 'Near Target' && 'selected'}"
-            onclick={() => select("Near Target")}>Near Target</button
+            class="yellow {selectedPerformanceFilter === 'Near Target' &&
+              'selected'}"
+            onclick={() => selectPerformanceFilter("Near Target")}
+            >Near Target</button
           ><button
-            class="green {selected === 'On Target' && 'selected'}"
-            onclick={() => select("On Target")}>On Target</button
+            class="green {selectedPerformanceFilter === 'On Target' &&
+              'selected'}"
+            onclick={() => selectPerformanceFilter("On Target")}
+            >On Target</button
           >
         </div>
       </div></HoverPopup
@@ -94,6 +137,7 @@
   }
 
   .selected {
+    background-color: var(--c-black-accent);
     color: var(--c-white);
   }
 

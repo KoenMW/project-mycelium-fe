@@ -25,3 +25,11 @@ export const calcPerformance = (run: Run): Performance => {
     ? "Near Target"
     : "Underperforming";
 };
+
+export const calcPerformanceNumber = (run: Run): 0 | 1 | 2 => {
+  return run.currentDay === run.estimatedDay
+    ? 0
+    : Math.abs(run.currentDay - run.estimatedDay) === 1
+    ? 1
+    : 2;
+};

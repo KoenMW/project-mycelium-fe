@@ -7,7 +7,7 @@
   const { children }: Props = $props();
 
   let anchor: HTMLElement;
-  let visible: boolean = $state(false);
+  let visible: boolean = $state(true);
 
   onMount(() => {
     const parent = anchor.parentElement;
