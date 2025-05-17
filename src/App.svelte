@@ -5,16 +5,6 @@
   let page = $derived({
     component: routes[$path],
   });
-
-  onMount(() => {
-    console.log("api url: ", import.meta.env.VITE_API_URL);
-    fetch(import.meta.env.VITE_API_URL).then((r) => {
-      console.log("respone:", r);
-      r.text().then((t) => {
-        console.log("text :", t);
-      });
-    });
-  });
 </script>
 
 <main>
