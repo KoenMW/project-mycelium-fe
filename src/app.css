@@ -32,6 +32,8 @@
   --p-large: 2.4rem;
   --p-huge: 4rem;
 
+  --shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
+
   font-family: var(--font-stack);
   line-height: 1.5;
   font-weight: 400;
@@ -111,5 +113,5 @@ button:focus-visible {
 }
 
 .shadow {
-  box-shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
+  box-shadow: var(--shadow);
 }

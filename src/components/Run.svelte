@@ -59,8 +59,12 @@
     right: 0;
     top: 0;
     bottom: 0;
-    box-shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
+    box-shadow: var(--shadow);
     transition: all 0.2s ease-in-out;
+  }
+
+  .container:hover {
+    scale: 0.95;
   }
 
   .container:hover::before {
