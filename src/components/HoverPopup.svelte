@@ -27,7 +27,7 @@
 </script>
 
 <div class="anchor" bind:this={anchor}>
-  <section style="display: {visible ? 'block' : 'none'};">
+  <section style="display: {visible ? 'block' : 'none'};" class="shadow">
     {@render children()}
   </section>
 </div>
@@ -44,7 +44,5 @@
     background-color: var(--c-bg);
     padding: var(--p-medium);
     border-radius: var(--p-medium);
-
-    box-shadow: 0 1rem 1rem 0.5rem var(--c-black-accent);
   }
 </style>

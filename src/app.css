@@ -88,6 +88,7 @@ button {
   background-color: var(--c-gray);
   cursor: pointer;
   transition: border-color 0.25s;
+  font-weight: 400;
 }
 button:hover {
   border-color: #646cff;
@@ -107,4 +108,8 @@ button:focus-visible {
 
 .green {
   background-color: var(--c-green);
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
 }

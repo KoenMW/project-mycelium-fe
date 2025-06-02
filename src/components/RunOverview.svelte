@@ -25,7 +25,7 @@
   );
 </script>
 
-<section>
+<section class="shadow">
   <div>
     <div class="detail">
       <span> Amount of runs: </span>

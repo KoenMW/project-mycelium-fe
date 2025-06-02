@@ -39,7 +39,7 @@
   });
 </script>
 
-<div>
+<div class="shadow">
   {@render children()}
   <input type="text" bind:value />
 </div>

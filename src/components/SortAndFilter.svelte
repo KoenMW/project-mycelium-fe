@@ -16,7 +16,6 @@
       });
       selectedPerformanceFilter = "";
       return;
-      calcPerformanceNumber;
     }
     filters.update((f) => {
       f["performance"] = (r) => calcPerformance(r) === performance;
@@ -50,7 +49,7 @@
   });
 </script>
 
-<div class="container">
+<div class="container shadow">
   <span
     >Sort
     <HoverPopup>
