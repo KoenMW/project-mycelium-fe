@@ -44,9 +44,31 @@
 <style>
   .container {
     --padding: var(--p-tiny) var(--p-medium) var(--p-medium);
-
+    position: relative;
     padding: var(--padding);
     border-radius: var(--p-medium);
+    font-family: var(--font-stack);
+    transition: all 0.1s ease-in-out;
+  }
+
+  .container::before {
+    content: "";
+    border-radius: var(--p-medium);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .container:hover::before {
+    opacity: 0;
+  }
+
+  .container:active {
+    scale: 0.9;
   }
 
   h3 {
