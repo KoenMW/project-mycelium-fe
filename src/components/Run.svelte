@@ -2,6 +2,7 @@
   import { maxDays } from "../core/consts";
   import type { Performance, Run } from "../core/types";
   import { calcPerformance } from "../core/utils";
+  import { goTo } from "../stores/router";
 
   type props = {
     run: Run;
@@ -16,9 +17,18 @@
   };
 
   let performance: Performance = $derived(calcPerformance(run));
+
+  const onclick = () => {
+    goTo("detail", [
+      {
+        key: "index",
+        value: `${run.index}`,
+      },
+    ]);
+  };
 </script>
 
-<div class="container {performanceClasses[performance]}">
+<button class="container {performanceClasses[performance]}" {onclick}>
   <h3>{performance}</h3>
   <div class="detail-container">
     <div class="detail">
@@ -39,7 +49,7 @@
       <span class="large">{run.estimatedDay}</span>
     </div>
   </div>
-</div>
+</button>
 
 <style>
   .container {

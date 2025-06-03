@@ -32,11 +32,10 @@
   --p-large: 2.4rem;
   --p-huge: 4rem;
 
-  --shadow: 0 0.5rem 1rem 0rem var(--c-black-accent);
+  --shadow: 0 0.2rem 0.5rem 0rem;
 
   font-family: var(--font-stack);
   line-height: 1.5;
-  font-weight: 400;
 
   color-scheme: light dark;
   color: var(--c-black-accent);
@@ -53,7 +52,6 @@
 }
 
 a {
-  font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
@@ -82,22 +80,11 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: var(--c-gray);
   cursor: pointer;
-  transition: border-color 0.25s;
-  font-weight: 400;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border: none;
 }
 
 .red {

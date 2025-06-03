@@ -5,6 +5,7 @@
   import Run from "../components/Run.svelte";
   import { filters, runs, sortings } from "../stores/runs";
   import { applyMiltipleFiltersAndSortings } from "../core/utils";
+  import type { ShadowColours } from "../core/types";
 
   const displayRuns = $derived(
     applyMiltipleFiltersAndSortings($runs, $filters, $sortings)
@@ -18,17 +19,41 @@
       },
     });
   };
+
+  let onTarget = $derived(
+    displayRuns.filter((r) => {
+      return Math.abs(r.currentDay - r.estimatedDay) === 0;
+    }).length
+  );
+  let nearTarget = $derived(
+    displayRuns.filter((r) => {
+      return Math.abs(r.currentDay - r.estimatedDay) === 1;
+    }).length
+  );
+  let underperformed = $derived(
+    displayRuns.filter((r) => {
+      return Math.abs(r.currentDay - r.estimatedDay) > 1;
+    }).length
+  );
+
+  let shadowColour: ShadowColours = $derived(
+    onTarget >= nearTarget && onTarget >= underperformed
+      ? "green"
+      : nearTarget >= underperformed
+        ? "yellow"
+        : "red"
+  );
 </script>
 
 <section>
   <h1>Active Runs</h1>
   <div class="controls">
-    <SortAndFilter />
-    <Search {onInput} validChars="0123456789">
+    <SortAndFilter {shadowColour} />
+    <Search {onInput} validChars="0123456789" {shadowColour}>
       <span class="run">Sample: </span>
     </Search>
   </div>
-  <RunOverview runs={displayRuns} />
+  <RunOverview {onTarget} {nearTarget} {underperformed} {shadowColour} />
   <section class="runs">
     {#each displayRuns as run}
       <Run {run} />

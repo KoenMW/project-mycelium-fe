@@ -1,36 +1,31 @@
 <script lang="ts">
-  import type { Run } from "../core/types";
+  import type { Run, ShadowColours } from "../core/types";
   import RunDonutChart from "./RunDonutChart.svelte";
 
-  type props = {
-    runs: Run[];
+  type Props = {
+    onTarget: number;
+    nearTarget: number;
+    underperformed: number;
   };
 
-  const { runs }: props = $props();
+  type PartialProps = Partial<{
+    shadowColour: ShadowColours;
+  }>;
 
-  let onTarget = $derived(
-    runs.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) === 0;
-    }).length
-  );
-  let nearTarget = $derived(
-    runs.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) === 1;
-    }).length
-  );
-  let underperformed = $derived(
-    runs.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) > 1;
-    }).length
-  );
+  const {
+    onTarget,
+    nearTarget,
+    underperformed,
+    shadowColour = "gray",
+  }: Props & PartialProps = $props();
 </script>
 
-<section class="shadow">
+<section style="--c: var(--c-{shadowColour})">
   <div>
     <div class="detail">
       <span> Amount of runs: </span>
       <span class="large">
-        {runs.length}
+        {onTarget + nearTarget + underperformed}
       </span>
     </div>
     <div class="detail-container">
@@ -69,6 +64,8 @@
     border-radius: var(--p-medium);
     flex-grow: 1;
     align-items: center;
+
+    box-shadow: var(--shadow) var(--c);
   }
 
   .detail-container {

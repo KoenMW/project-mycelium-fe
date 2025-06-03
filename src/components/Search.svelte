@@ -1,20 +1,23 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import type { ShadowColours } from "../core/types";
 
-  type requiredProps = {
+  type RequiredProps = {
     children: Snippet;
     onInput: (v: string) => void;
   };
 
-  type partialProps = Partial<{
+  type PartialProps = Partial<{
     validChars: string;
+    shadowColour: ShadowColours;
   }>;
 
   let {
     children,
     onInput,
     validChars = "",
-  }: requiredProps & partialProps = $props();
+    shadowColour = "gray",
+  }: RequiredProps & PartialProps = $props();
 
   let value: string = $state("");
 
@@ -39,7 +42,7 @@
   });
 </script>
 
-<div class="shadow">
+<div style="--c: var(--c-{shadowColour})">
   {@render children()}
   <input type="text" bind:value />
 </div>
@@ -55,6 +58,7 @@
     gap: 0.5ch;
     font-weight: bold;
     align-self: flex-end;
+    box-shadow: var(--shadow) var(--c);
   }
 
   input {
