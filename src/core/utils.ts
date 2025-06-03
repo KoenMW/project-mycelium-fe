@@ -1,9 +1,9 @@
-import type { filterType, Performance, Run, sortingType } from "./types";
+import type { FilterType, Performance, Run, SortingType } from "./types";
 
 export const applyMiltipleFiltersAndSortings = <T>(
   array: T[],
-  filters: Record<string, filterType<T>>,
-  sortings: Record<string, sortingType<T>>
+  filters: Record<string, FilterType<T>>,
+  sortings: Record<string, SortingType<T>>
 ): T[] => {
   let result: T[] = array;
 

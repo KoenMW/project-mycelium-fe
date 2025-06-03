@@ -6,6 +6,8 @@ export type Run = {
 
 export type Performance = "On Target" | "Near Target" | "Underperforming";
 
-export type filterType<T> = (r: T, i: number, a: T[]) => boolean;
+export type FilterType<T> = (r: T, i: number, a: T[]) => boolean;
 
-export type sortingType<T> = (a: T, b: T) => number;
+export type SortingType<T> = (a: T, b: T) => number;
+
+export type ShadowColours = "green" | "yellow" | "red" | "gray";

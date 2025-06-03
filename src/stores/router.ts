@@ -14,7 +14,10 @@ export const routes: Routes = {
 export const path = writable<string>("loading");
 export const parameters = writable<Record<string, string>>({});
 
-export const goTo = (route: string) => {
+export const goTo = (
+  route: string,
+  params: { key: string; value: string }[] = []
+) => {
   if (!routes[route]) {
     parameters.update((p) => {
       p["invalidRoute"] = route;
@@ -24,6 +27,9 @@ export const goTo = (route: string) => {
   }
   const url = new URL(window.location.href);
   url.searchParams.set("route", route);
+  for (let i = 0; i < params.length; i++) {
+    url.searchParams.set(params[i].key, params[i].value);
+  }
   history.pushState({}, "", url.toString());
   setRoute();
 };

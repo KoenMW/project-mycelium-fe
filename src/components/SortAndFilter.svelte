@@ -1,8 +1,14 @@
 <script lang="ts">
-  import type { Performance } from "../core/types";
+  import type { Performance, ShadowColours } from "../core/types";
   import { calcPerformance, calcPerformanceNumber } from "../core/utils";
   import { filters, sortings } from "../stores/runs";
   import HoverPopup from "./HoverPopup.svelte";
+
+  type PartialProps = Partial<{
+    shadowColour: ShadowColours;
+  }>;
+
+  const { shadowColour = "gray" }: PartialProps = $props();
 
   let selectedPerformanceFilter = $state<Performance | "">("");
 
@@ -49,7 +55,7 @@
   });
 </script>
 
-<div class="container shadow">
+<div class="container" style="--c: var(--c-{shadowColour})">
   <span
     >Sort
     <HoverPopup>
@@ -105,6 +111,7 @@
     align-items: start;
     border-radius: var(--p-medium);
     font-weight: bold;
+    box-shadow: var(--shadow) var(--c);
   }
 
   span {
