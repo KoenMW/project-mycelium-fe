@@ -1,7 +1,12 @@
-export type Run = {
+export type MyceliumInstance = {
   index: number;
   currentDay: number;
   estimatedDay: number;
+};
+
+export type Run = {
+  index: number;
+  instances: MyceliumInstance[];
 };
 
 export type Performance = "On Target" | "Near Target" | "Underperforming";

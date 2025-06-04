@@ -24,7 +24,7 @@
       return;
     }
     filters.update((f) => {
-      f["performance"] = (r) => calcPerformance(r) === performance;
+      f["performance"] = (r) => calcPerformance(r.instances[0]) === performance;
       return f;
     });
     selectedPerformanceFilter = performance;
@@ -42,8 +42,10 @@
     sortings.update((s) => {
       s["performance"] = (a, b) => {
         return direction === "ascending"
-          ? calcPerformanceNumber(b) - calcPerformanceNumber(a)
-          : calcPerformanceNumber(a) - calcPerformanceNumber(b);
+          ? calcPerformanceNumber(b.instances[0]) -
+              calcPerformanceNumber(a.instances[0])
+          : calcPerformanceNumber(a.instances[0]) -
+              calcPerformanceNumber(b.instances[0]);
       };
       return s;
     });

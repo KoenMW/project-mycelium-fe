@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Run, ShadowColours } from "../core/types";
+  import type { MyceliumInstance, ShadowColours } from "../core/types";
   import RunDonutChart from "./RunDonutChart.svelte";
 
   type Props = {

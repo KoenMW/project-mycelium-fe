@@ -2,37 +2,47 @@
   import RunOverview from "../components/RunOverview.svelte";
   import Search from "../components/Search.svelte";
   import SortAndFilter from "../components/SortAndFilter.svelte";
-  import Run from "../components/Run.svelte";
   import { filters, runs, sortings } from "../stores/runs";
   import { applyMiltipleFiltersAndSortings } from "../core/utils";
-  import type { ShadowColours } from "../core/types";
+  import type {
+    MyceliumInstance,
+    Run as RunType,
+    ShadowColours,
+  } from "../core/types";
+  import Run from "../components/Run.svelte";
 
   const displayRuns = $derived(
-    applyMiltipleFiltersAndSortings($runs, $filters, $sortings)
+    applyMiltipleFiltersAndSortings<RunType>($runs, $filters, $sortings)
   );
 
   const onInput = (searchString: string) => {
     filters.set({
-      searchString: (r) => {
+      searchString: (_, i) => {
         if (!searchString) return true;
-        return r.index.toString() === searchString;
+        return i.toString() === searchString;
       },
     });
   };
 
   let onTarget = $derived(
     displayRuns.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) === 0;
+      return (
+        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) === 0
+      );
     }).length
   );
   let nearTarget = $derived(
     displayRuns.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) === 1;
+      return (
+        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) === 1
+      );
     }).length
   );
   let underperformed = $derived(
     displayRuns.filter((r) => {
-      return Math.abs(r.currentDay - r.estimatedDay) > 1;
+      return (
+        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) > 1
+      );
     }).length
   );
 

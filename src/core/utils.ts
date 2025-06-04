@@ -1,4 +1,9 @@
-import type { FilterType, Performance, Run, SortingType } from "./types";
+import type {
+  FilterType,
+  Performance,
+  MyceliumInstance,
+  SortingType,
+} from "./types";
 
 export const applyMiltipleFiltersAndSortings = <T>(
   array: T[],
@@ -18,7 +23,7 @@ export const applyMiltipleFiltersAndSortings = <T>(
   return result;
 };
 
-export const calcPerformance = (run: Run): Performance => {
+export const calcPerformance = (run: MyceliumInstance): Performance => {
   return run.currentDay === run.estimatedDay
     ? "On Target"
     : Math.abs(run.currentDay - run.estimatedDay) === 1
@@ -26,7 +31,7 @@ export const calcPerformance = (run: Run): Performance => {
     : "Underperforming";
 };
 
-export const calcPerformanceNumber = (run: Run): 0 | 1 | 2 => {
+export const calcPerformanceNumber = (run: MyceliumInstance): 0 | 1 | 2 => {
   return run.currentDay === run.estimatedDay
     ? 0
     : Math.abs(run.currentDay - run.estimatedDay) === 1
