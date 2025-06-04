@@ -1,8 +1,7 @@
 import * as d3 from "d3";
-import { generateId } from "./utils";
-import type { ShadowColours } from "./types";
-
-type ArcElement = SVGPathElement & { current: d3.PieArcDatum<number> };
+import { calcPerformance, generateId } from "./utils";
+import type { MyceliumInstance, Run } from "./types";
+import { performanceToColour } from "./consts";
 
 const getColor = (index: number) => {
   if (index === 0) return "var(--c-green)";
@@ -39,8 +38,6 @@ export const drawDonut = (data: number[]) => {
   const width = height;
   const outerRadius = height / 2 - 10;
   const innerRadius = outerRadius * 0.75;
-  const tau = 2 * Math.PI;
-  const color = d3.scaleOrdinal(d3.schemeObservable10);
 
   const svg = d3
     .create("svg")
@@ -98,34 +95,48 @@ export const drawDonut = (data: number[]) => {
     )
     .each(setCurrent);
 
-  function change(value: number[]) {
+  const change = (value: number[]) => {
     pie.value((_d, i) => value[i]); // change the value function
     path.data(pie); // compute the new angles
     path.transition().duration(500).attrTween("d", tween); // redraw the arcs
-  }
+  };
 
-  // Store the displayed angles in _current.
-  // Then, interpolate from _current to the new angles.
-  // During the transition, _current is updated in-place by d3.interpolate.
-  function arcTween(this: ArcElement, a: d3.PieArcDatum<number>) {
-    const i = d3.interpolate(this.current, a); // `this._current` should store previous datum
-    this.current = i(1); // update stored current position
-    return function (t: number) {
-      const angle = i(t);
-      return arc({
-        endAngle: angle.endAngle,
-        innerRadius: innerRadius,
-        outerRadius: outerRadius,
-        startAngle: angle.startAngle,
-        padAngle: angle.padAngle,
-      })!;
-    };
-  }
-  // Return the svg node to be displayed.
   return {
     svg,
     change,
   };
+};
+const margin = 40;
+const tickSize = 6;
+
+export const drawTimeline = async (run: MyceliumInstance, width: number) => {
+  const colour = performanceToColour[calcPerformance(run)];
+  const maxRange = Math.max(run.currentDay, run.estimatedDay, 14);
+  const svg = d3.select(".timeline").append("svg").attr("width", width);
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, maxRange + 1])
+    .range([margin, width - margin]);
+  const group = svg
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0, 50)`)
+    .call(d3.axisBottom(xScale));
+
+  svg.select(".domain").remove();
+
+  group
+    .append("line")
+    .attr("x1", xScale.range()[0])
+    .attr("x2", xScale.range()[1])
+    .attr("y1", tickSize / 2)
+    .attr("y2", tickSize / 2)
+    .attr("stroke", "var(--c-black-accent)");
+
+  await addLocation(group, xScale, run.currentDay, colour, "current day");
+
+  if (run.currentDay != run.estimatedDay)
+    await addLocation(group, xScale, run.estimatedDay, colour, "estimated day");
 };
 
 let locationSvg: string | null = null;
@@ -158,4 +169,106 @@ export const addLocation = async <T extends d3.BaseType>(
     .html(locationSvg)
     .select("path")
     .attr("fill", `var(--c-${colour})`);
+};
+
+export const drawConfusionMatrix = (run: Run, width: number) => {
+  if (width >= 800) {
+    width = width * 0.75;
+  } else if (width >= 1600) {
+    width = width / 2;
+  }
+
+  const black = "var(--c-black-accent)";
+
+  const svg = d3
+    .select(".matrix")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", width);
+
+  const maxX = Math.max(...run.instances.map((d) => d.currentDay), 14);
+  const maxY = Math.max(...run.instances.map((d) => d.estimatedDay), 14);
+
+  const plotSize = width - 2 * margin;
+  const cellCount = Math.max(maxX, maxY) + 2;
+  const cellSize = plotSize / cellCount + 2;
+
+  const xScale = d3
+    .scaleLinear()
+    .domain([1, cellCount])
+    .range([margin, width - margin]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([1, cellCount])
+    .range([margin, width - margin]);
+
+  // Axes with full-length gridlines
+  svg
+    .append("g")
+    .attr("class", "xAxis")
+    .attr("transform", `translate(0, ${margin})`)
+    .call(
+      d3
+        .axisTop(xScale)
+        .ticks(cellCount)
+        .tickFormat(d3.format("d"))
+        .tickSize(-plotSize)
+    );
+
+  svg
+    .append("g")
+    .attr("class", "yAxis")
+    .attr("transform", `translate(${margin}, 0)`)
+    .call(
+      d3
+        .axisLeft(yScale)
+        .ticks(cellCount)
+        .tickFormat(d3.format("d"))
+        .tickSize(-plotSize)
+    );
+
+  // Style gridlines
+  svg.selectAll(".tick line").attr("stroke", "#ccc");
+
+  // Axis Labels
+  svg
+    .append("text")
+    .attr("class", "x axis-label")
+    .attr("x", margin + plotSize / 2)
+    .attr("y", margin - 25)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", black)
+    .text("Current Day");
+
+  svg
+    .append("text")
+    .attr("class", "y axis-label")
+    .attr("x", -(margin + plotSize / 2))
+    .attr("y", margin - 30)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", black)
+    .text("Estimated Day");
+
+  // Draw cells
+  svg
+    .selectAll("rect")
+    .data(run.instances)
+    .enter()
+    .append("rect")
+    .attr("x", ({ currentDay }) => {
+      return xScale(currentDay);
+    })
+    .attr("y", ({ estimatedDay }) => {
+      return yScale(estimatedDay);
+    })
+    .attr("width", cellSize)
+    .attr("height", cellSize)
+    .attr("fill", (r) => {
+      const colour = performanceToColour[calcPerformance(r)];
+      return `var(--c-${colour})`;
+    });
 };
