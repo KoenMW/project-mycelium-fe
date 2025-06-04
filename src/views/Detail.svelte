@@ -2,62 +2,37 @@
   import { onMount } from "svelte";
   import type { MyceliumInstance, Run } from "../core/types";
   import { runs } from "../stores/runs";
-  import { drawTimeline } from "../core/d3";
+  import { drawConfusionMatrix, drawTimeline } from "../core/d3";
   import * as d3 from "d3";
+  import { performanceToColour } from "../core/consts";
+  import { calcPerformance } from "../core/utils";
 
   const runIndex =
     Number(new URLSearchParams(window.location.search).get("index")) ?? -1;
 
-  const run: Run | undefined = $runs[runIndex];
+  const run: Run | undefined = $runs.find((r) => r.index === runIndex);
 
   let timeline: HTMLElement | null = $state(null);
+  let matrix: HTMLElement | null = $state(null);
   let width = $state(0);
 
-  const timelineInit = async (width: number) => {
+  const d3Init = async (width: number) => {
+    if (!run) {
+      console.error(`coulnd't find run with index: ${runIndex}`);
+      return;
+    }
     if (timeline) timeline.innerHTML = "";
+    if (matrix) matrix.innerHTML = "";
     await drawTimeline(run.instances[0], width);
+    drawConfusionMatrix(run, width);
   };
 
   $effect(() => {
-    timelineInit(width);
+    d3Init(width);
   });
 
-  const margin = 40;
-  const confusionMatrixInit = (width: number) => {
-    width = width * 0.5;
-    const svg = d3
-      .select(".matrix")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", width);
-
-    const maxXRange = Math.max(run.instances[0].currentDay, 14);
-    const maxYRange = Math.max(run.instances[0].estimatedDay, 14);
-
-    const xScale = d3
-      .scaleLinear()
-      .domain([0, maxXRange + 1])
-      .range([margin, width - margin]);
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, maxYRange + 1])
-      .range([margin, width - margin]);
-
-    svg
-      .append("g")
-      .attr("class", "xAxis")
-      .call(d3.axisTop(xScale))
-      .attr("transform", `translate(0, ${margin})`);
-    svg
-      .append("g")
-      .attr("class", "xAxis")
-      .call(d3.axisLeft(yScale))
-      .attr("transform", `translate(${margin}, 0)`);
-  };
-
   onMount(() => {
-    timelineInit(width);
-    confusionMatrixInit(width);
+    d3Init(width);
   });
 </script>
 
@@ -71,6 +46,9 @@
 
 <section>
   <h2>You myceliums confusion matrix</h2>
-  <div class="matrix" style="height: {width}; width: {width};"></div>
-  <!-- confusion matrix instead of cluster -->
+  <div
+    class="matrix"
+    bind:this={matrix}
+    style="height: {width}; width: {width};"
+  ></div>
 </section>

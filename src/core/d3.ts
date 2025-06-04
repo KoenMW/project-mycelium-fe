@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { calcPerformance, generateId } from "./utils";
-import type { MyceliumInstance } from "./types";
+import type { MyceliumInstance, Run } from "./types";
 import { performanceToColour } from "./consts";
 
 const getColor = (index: number) => {
@@ -169,4 +169,106 @@ export const addLocation = async <T extends d3.BaseType>(
     .html(locationSvg)
     .select("path")
     .attr("fill", `var(--c-${colour})`);
+};
+
+export const drawConfusionMatrix = (run: Run, width: number) => {
+  if (width >= 800) {
+    width = width * 0.75;
+  } else if (width >= 1600) {
+    width = width / 2;
+  }
+
+  const black = "var(--c-black-accent)";
+
+  const svg = d3
+    .select(".matrix")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", width);
+
+  const maxX = Math.max(...run.instances.map((d) => d.currentDay), 14);
+  const maxY = Math.max(...run.instances.map((d) => d.estimatedDay), 14);
+
+  const plotSize = width - 2 * margin;
+  const cellCount = Math.max(maxX, maxY) + 2;
+  const cellSize = plotSize / cellCount + 2;
+
+  const xScale = d3
+    .scaleLinear()
+    .domain([1, cellCount])
+    .range([margin, width - margin]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([1, cellCount])
+    .range([margin, width - margin]);
+
+  // Axes with full-length gridlines
+  svg
+    .append("g")
+    .attr("class", "xAxis")
+    .attr("transform", `translate(0, ${margin})`)
+    .call(
+      d3
+        .axisTop(xScale)
+        .ticks(cellCount)
+        .tickFormat(d3.format("d"))
+        .tickSize(-plotSize)
+    );
+
+  svg
+    .append("g")
+    .attr("class", "yAxis")
+    .attr("transform", `translate(${margin}, 0)`)
+    .call(
+      d3
+        .axisLeft(yScale)
+        .ticks(cellCount)
+        .tickFormat(d3.format("d"))
+        .tickSize(-plotSize)
+    );
+
+  // Style gridlines
+  svg.selectAll(".tick line").attr("stroke", "#ccc");
+
+  // Axis Labels
+  svg
+    .append("text")
+    .attr("class", "x axis-label")
+    .attr("x", margin + plotSize / 2)
+    .attr("y", margin - 25)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", black)
+    .text("Current Day");
+
+  svg
+    .append("text")
+    .attr("class", "y axis-label")
+    .attr("x", -(margin + plotSize / 2))
+    .attr("y", margin - 30)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", black)
+    .text("Estimated Day");
+
+  // Draw cells
+  svg
+    .selectAll("rect")
+    .data(run.instances)
+    .enter()
+    .append("rect")
+    .attr("x", ({ currentDay }) => {
+      return xScale(currentDay);
+    })
+    .attr("y", ({ estimatedDay }) => {
+      return yScale(estimatedDay);
+    })
+    .attr("width", cellSize)
+    .attr("height", cellSize)
+    .attr("fill", (r) => {
+      const colour = performanceToColour[calcPerformance(r)];
+      return `var(--c-${colour})`;
+    });
 };
