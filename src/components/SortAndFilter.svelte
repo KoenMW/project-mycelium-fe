@@ -61,12 +61,16 @@
     <HoverPopup>
       <div class="performance">
         performance: <button
-          class={selectedPerformanceSort === "ascending" ? "selected" : ""}
+          class="red {selectedPerformanceSort === 'ascending'
+            ? 'selected'
+            : ''}"
           onclick={() => selectPerformanceSort("ascending")}
         >
           ascending
         </button><button
-          class={selectedPerformanceSort === "descending" ? "selected" : ""}
+          class="green {selectedPerformanceSort === 'descending'
+            ? 'selected'
+            : ''}"
           onclick={() => selectPerformanceSort("descending")}
         >
           descending

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { generateId } from "./utils";
+import type { ShadowColours } from "./types";
 
 type ArcElement = SVGPathElement & { current: d3.PieArcDatum<number> };
 
@@ -125,4 +126,36 @@ export const drawDonut = (data: number[]) => {
     svg,
     change,
   };
+};
+
+let locationSvg: string | null = null;
+
+export const addLocation = async <T extends d3.BaseType>(
+  root: d3.Selection<T, unknown, HTMLElement, any>,
+  scale: d3.ScaleLinear<number, number, never>,
+  location: number,
+  colour: string,
+  text: string = ""
+) => {
+  if (!locationSvg) {
+    locationSvg = await (
+      await fetch("/project-mycelium-fe/icons/location.svg")
+    ).text();
+  }
+  const g = root.append("g");
+  g.append("text")
+    .attr("fill", "currentColor")
+    .attr("font-size", "12px")
+    .attr("transform", "translate(0, -10)")
+    .text(text);
+
+  g.attr("transform", `translate(${scale(location)},  ${-24})`)
+    .attr("text-anchor", "middle")
+    .attr("dominant-baseline", "middle");
+
+  g.append("g")
+    .attr("transform", "translate(-10, 0)")
+    .html(locationSvg)
+    .select("path")
+    .attr("fill", `var(--c-${colour})`);
 };

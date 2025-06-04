@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { maxDays } from "../core/consts";
+  import { maxDays, performanceToColour } from "../core/consts";
   import type { Performance, Run } from "../core/types";
   import { calcPerformance } from "../core/utils";
   import { goTo } from "../stores/router";
@@ -9,12 +9,6 @@
   };
 
   const { run }: props = $props();
-
-  const performanceClasses: Record<Performance, string> = {
-    "On Target": "green",
-    "Near Target": "yellow",
-    Underperforming: "red",
-  };
 
   let performance: Performance = $derived(calcPerformance(run));
 
@@ -28,7 +22,7 @@
   };
 </script>
 
-<button class="container {performanceClasses[performance]}" {onclick}>
+<button class="container {performanceToColour[performance]}" {onclick}>
   <h3>{performance}</h3>
   <div class="detail-container">
     <div class="detail">
