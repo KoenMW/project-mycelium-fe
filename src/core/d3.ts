@@ -190,8 +190,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
   const maxY = Math.max(...run.instances.map((d) => d.estimatedDay), 14);
 
   const plotSize = width - 2 * margin;
-  const cellCount = Math.max(maxX, maxY) + 2;
-  const cellSize = plotSize / cellCount + 2;
+  const cellCount = Math.max(maxX, maxY) + 1;
 
   const xScale = d3
     .scaleLinear()
@@ -202,6 +201,8 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .scaleLinear()
     .domain([1, cellCount])
     .range([margin, width - margin]);
+
+  const cellSize = xScale(1) - xScale(0);
 
   // Axes with full-length gridlines
   svg

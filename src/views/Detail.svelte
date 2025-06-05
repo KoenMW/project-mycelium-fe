@@ -1,11 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { MyceliumInstance, Run } from "../core/types";
+  import type { Run } from "../core/types";
   import { runs } from "../stores/runs";
   import { drawConfusionMatrix, drawTimeline } from "../core/d3";
-  import * as d3 from "d3";
-  import { performanceToColour } from "../core/consts";
-  import { calcPerformance } from "../core/utils";
 
   const runIndex =
     Number(new URLSearchParams(window.location.search).get("index")) ?? -1;
