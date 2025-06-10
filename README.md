@@ -1,4 +1,4 @@
-# Svelte Project Mycelium front end
+# Svelte Project Mycelium frontend
 Backend -> https://github.com/KoenMW/project-mycelium-be
 
 # Set up
