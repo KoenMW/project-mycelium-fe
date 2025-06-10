@@ -85,6 +85,8 @@ button {
   font-family: inherit;
   cursor: pointer;
   border: none;
+  position: relative;
+  transition: all 0.2s ease-in-out;
 }
 
 .red {
@@ -101,4 +103,28 @@ button {
 
 .shadow {
   box-shadow: var(--shadow);
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  scale: 0.95;
+}
+
+button:hover::before {
+  opacity: 0;
+}
+
+button:active {
+  scale: 0.9;
 }

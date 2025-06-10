@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { maxDays, performanceToColour } from "../core/consts";
+  import { maxDays, nPhases, performanceToColour } from "../core/consts";
   import type { Performance, MyceliumInstance, Run } from "../core/types";
   import { calcPerformance, findLatestDayIndex } from "../core/utils";
   import { goTo } from "../stores/router";
@@ -37,8 +37,8 @@
       <span>Phase</span>
       <span class="large"
         >{Math.round(
-          (run.instances[latestIndex].estimatedDay / maxDays) * 5
-        )}/5</span
+          (run.instances[latestIndex].estimatedDay / maxDays) * nPhases
+        )}/{nPhases}</span
       >
     </div>
     <div class="detail">

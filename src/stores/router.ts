@@ -3,6 +3,8 @@ import { writable, type Writable } from "svelte/store";
 import Home from "../views/Home.svelte";
 import NotFound from "../views/404.svelte";
 import Detail from "../views/Detail.svelte";
+import Predict from "../views/Predict.svelte";
+import Zip from "../views/Zip.svelte";
 
 export type Routes = Record<string, Component>;
 
@@ -12,6 +14,8 @@ export const routes: Routes = {
   home: Home,
   "404": NotFound,
   detail: Detail,
+  predict: Predict,
+  zip: Zip,
 };
 
 export const path = writable<string>("loading");

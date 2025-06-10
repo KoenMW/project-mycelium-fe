@@ -173,11 +173,7 @@ export const addLocation = async <T extends d3.BaseType>(
 };
 
 export const drawConfusionMatrix = (run: Run, width: number) => {
-  if (width >= 800) {
-    width = width * 0.75;
-  } else if (width >= 1600) {
-    width = width / 2;
-  }
+  width = width / 2;
 
   const black = "var(--c-black-accent)";
 
