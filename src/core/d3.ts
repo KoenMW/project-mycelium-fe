@@ -113,6 +113,7 @@ export const drawTimeline = async (run: MyceliumInstance, width: number) => {
   const colour = performanceToColour[calcPerformance(run)];
   const maxRange = Math.max(run.actualDay, run.estimatedDay, 14);
   const svg = d3.select(".timeline").append("svg").attr("width", width);
+
   const xScale = d3
     .scaleLinear()
     .domain([0, maxRange + 1])
@@ -180,29 +181,35 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
 
   const black = "var(--c-black-accent)";
 
-  const svg = d3
-    .select(".matrix")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", width);
-
   const maxX = Math.max(...run.instances.map((d) => d.actualDay), 14);
-  const maxY = Math.max(...run.instances.map((d) => d.estimatedDay), 14);
+  const maxY = 13;
 
   const plotSize = width - 2 * margin;
-  const cellCount = Math.max(maxX, maxY) + 1;
+  const cellCountX = maxX + 1;
+  const cellCountY = maxY + 1;
+
+  const plotWidth = width - 2 * margin;
+  const plotHeight = (plotWidth * cellCountY) / cellCountX;
+
+  const svg = d3
+    .select(".matrix")
+    .html("")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", plotHeight + 2 * margin);
 
   const xScale = d3
     .scaleLinear()
-    .domain([0, cellCount])
+    .domain([0, cellCountX])
     .range([margin, width - margin]);
 
   const yScale = d3
     .scaleLinear()
-    .domain([0, cellCount])
-    .range([margin, width - margin]);
+    .domain([0, cellCountY])
+    .range([margin, margin * 2 + plotHeight]);
 
-  const cellSize = xScale(1) - xScale(0);
+  const cellWidth = xScale(1) - xScale(0);
+  const cellHeight = yScale(1) - yScale(0);
 
   // Axes with full-length gridlines
   svg
@@ -212,7 +219,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .call(
       d3
         .axisTop(xScale)
-        .ticks(cellCount)
+        .ticks(cellCountX)
         .tickFormat(d3.format("d"))
         .tickSize(-plotSize)
     );
@@ -224,7 +231,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .call(
       d3
         .axisLeft(yScale)
-        .ticks(cellCount)
+        .ticks(cellCountY)
         .tickFormat(d3.format("d"))
         .tickSize(-plotSize)
     );
@@ -235,7 +242,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     if (!isLast) {
       d3.select(this)
         .select("text")
-        .attr("x", cellSize / 2)
+        .attr("x", cellWidth / 2)
         .attr("text-anchor", "middle");
     } else {
       d3.select(this).select("text").text("");
@@ -248,7 +255,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     if (!isLast) {
       d3.select(this)
         .select("text")
-        .attr("y", cellSize / 2)
+        .attr("y", cellHeight / 2)
         .attr("dy", "0.35em");
     } else {
       d3.select(this).select("text").text("");
@@ -262,7 +269,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
   svg
     .append("text")
     .attr("class", "x axis-label")
-    .attr("x", margin + plotSize / 2)
+    .attr("x", margin + plotWidth / 2)
     .attr("y", margin - 25)
     .attr("text-anchor", "middle")
     .attr("font-size", "12px")
@@ -272,7 +279,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
   svg
     .append("text")
     .attr("class", "y axis-label")
-    .attr("x", -(margin + plotSize / 2))
+    .attr("x", -(margin + plotHeight / 2))
     .attr("y", margin - 30)
     .attr("transform", "rotate(-90)")
     .attr("text-anchor", "middle")
@@ -292,8 +299,8 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .attr("y", ({ estimatedDay }) => {
       return yScale(estimatedDay);
     })
-    .attr("width", cellSize)
-    .attr("height", cellSize)
+    .attr("width", cellWidth)
+    .attr("height", cellHeight)
     .attr("fill", (r) => {
       const colour = performanceToColour[calcPerformance(r)];
       return `var(--c-${colour})`;
