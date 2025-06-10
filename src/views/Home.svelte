@@ -2,14 +2,18 @@
   import RunOverview from "../components/RunOverview.svelte";
   import Search from "../components/Search.svelte";
   import SortAndFilter from "../components/SortAndFilter.svelte";
-  import { filters, runs, sortings } from "../stores/runs";
-  import { applyMiltipleFiltersAndSortings } from "../core/utils";
+  import { filters, runs, sortings, updateAvailable } from "../stores/runs";
+  import {
+    applyMiltipleFiltersAndSortings,
+    findLatestDayIndex,
+  } from "../core/utils";
   import type {
     MyceliumInstance,
     Run as RunType,
     ShadowColours,
   } from "../core/types";
   import Run from "../components/Run.svelte";
+  import RefreshButton from "../components/RefreshButton.svelte";
 
   const displayRuns = $derived(
     applyMiltipleFiltersAndSortings<RunType>($runs, $filters, $sortings)
@@ -26,22 +30,34 @@
 
   let onTarget = $derived(
     displayRuns.filter((r) => {
+      const latestIndex = findLatestDayIndex(r);
       return (
-        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) === 0
+        Math.abs(
+          r.instances[latestIndex].actualDay -
+            r.instances[latestIndex].estimatedDay
+        ) === 0
       );
     }).length
   );
   let nearTarget = $derived(
     displayRuns.filter((r) => {
+      const latestIndex = findLatestDayIndex(r);
       return (
-        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) === 1
+        Math.abs(
+          r.instances[latestIndex].actualDay -
+            r.instances[latestIndex].estimatedDay
+        ) === 1
       );
     }).length
   );
   let underperformed = $derived(
     displayRuns.filter((r) => {
+      const latestIndex = findLatestDayIndex(r);
       return (
-        Math.abs(r.instances[0].currentDay - r.instances[0].estimatedDay) > 1
+        Math.abs(
+          r.instances[latestIndex].actualDay -
+            r.instances[latestIndex].estimatedDay
+        ) > 1
       );
     }).length
   );
@@ -57,6 +73,7 @@
 
 <section>
   <h1>Active Runs</h1>
+  <RefreshButton />
   <div class="controls">
     <SortAndFilter {shadowColour} />
     <Search {onInput} validChars="0123456789" {shadowColour}>

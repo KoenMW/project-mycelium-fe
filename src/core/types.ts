@@ -1,6 +1,17 @@
+export type PBMycelium = {
+  id: string;
+  segmented: string;
+  run: number;
+  hour: number;
+  angle: number;
+  estimatedDay: number;
+};
+
 export type MyceliumInstance = {
-  index: number;
-  currentDay: number;
+  id: string;
+  segmented: string;
+  run: number;
+  actualDay: number;
   estimatedDay: number;
 };
 

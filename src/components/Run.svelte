@@ -1,7 +1,7 @@
 <script lang="ts">
   import { maxDays, performanceToColour } from "../core/consts";
   import type { Performance, MyceliumInstance, Run } from "../core/types";
-  import { calcPerformance } from "../core/utils";
+  import { calcPerformance, findLatestDayIndex } from "../core/utils";
   import { goTo } from "../stores/router";
 
   type props = {
@@ -10,7 +10,11 @@
 
   const { run }: props = $props();
 
-  let performance: Performance = $derived(calcPerformance(run.instances[0]));
+  let latestIndex: number = $derived(findLatestDayIndex(run));
+
+  let performance: Performance = $derived(
+    calcPerformance(run.instances[latestIndex])
+  );
 
   const onclick = () => {
     goTo("detail", [
@@ -32,16 +36,18 @@
     <div class="detail">
       <span>Phase</span>
       <span class="large"
-        >{Math.round((run.instances[0].estimatedDay / maxDays) * 5)}/5</span
+        >{Math.round(
+          (run.instances[latestIndex].estimatedDay / maxDays) * 5
+        )}/5</span
       >
     </div>
     <div class="detail">
       <span>Current Day</span>
-      <span class="large">{run.instances[0].currentDay}</span>
+      <span class="large">{run.instances[latestIndex].actualDay}</span>
     </div>
     <div class="detail">
       <span>Estimated Day</span>
-      <span class="large">{run.instances[0].estimatedDay}</span>
+      <span class="large">{run.instances[latestIndex].estimatedDay}</span>
     </div>
   </div>
 </button>

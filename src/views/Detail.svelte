@@ -3,6 +3,7 @@
   import type { Run } from "../core/types";
   import { runs } from "../stores/runs";
   import { drawConfusionMatrix, drawTimeline } from "../core/d3";
+  import { findLatestDayIndex } from "../core/utils";
 
   const runIndex =
     Number(new URLSearchParams(window.location.search).get("index")) ?? -1;
@@ -20,7 +21,10 @@
     }
     if (timeline) timeline.innerHTML = "";
     if (matrix) matrix.innerHTML = "";
-    await drawTimeline(run.instances[0], width);
+
+    const latestDayIndex = findLatestDayIndex(run);
+
+    await drawTimeline(run.instances[latestDayIndex], width);
     drawConfusionMatrix(run, width);
   };
 

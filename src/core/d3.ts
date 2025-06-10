@@ -111,7 +111,7 @@ const tickSize = 6;
 
 export const drawTimeline = async (run: MyceliumInstance, width: number) => {
   const colour = performanceToColour[calcPerformance(run)];
-  const maxRange = Math.max(run.currentDay, run.estimatedDay, 14);
+  const maxRange = Math.max(run.actualDay, run.estimatedDay, 14);
   const svg = d3.select(".timeline").append("svg").attr("width", width);
   const xScale = d3
     .scaleLinear()
@@ -133,9 +133,9 @@ export const drawTimeline = async (run: MyceliumInstance, width: number) => {
     .attr("y2", tickSize / 2)
     .attr("stroke", "var(--c-black-accent)");
 
-  await addLocation(group, xScale, run.currentDay, colour, "current day");
+  await addLocation(group, xScale, run.actualDay, colour, "current day");
 
-  if (run.currentDay != run.estimatedDay)
+  if (run.actualDay != run.estimatedDay)
     await addLocation(group, xScale, run.estimatedDay, colour, "estimated day");
 };
 
@@ -186,7 +186,7 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .attr("width", width)
     .attr("height", width);
 
-  const maxX = Math.max(...run.instances.map((d) => d.currentDay), 14);
+  const maxX = Math.max(...run.instances.map((d) => d.actualDay), 14);
   const maxY = Math.max(...run.instances.map((d) => d.estimatedDay), 14);
 
   const plotSize = width - 2 * margin;
@@ -260,11 +260,11 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .data(run.instances)
     .enter()
     .append("rect")
-    .attr("x", ({ currentDay }) => {
-      return xScale(currentDay);
+    .attr("x", ({ actualDay: currentDay }) => {
+      return xScale(currentDay + 1);
     })
     .attr("y", ({ estimatedDay }) => {
-      return yScale(estimatedDay);
+      return yScale(estimatedDay + 1);
     })
     .attr("width", cellSize)
     .attr("height", cellSize)
