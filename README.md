@@ -18,4 +18,4 @@ npm run dev
 
 # Background
 
-This is the front end of an application that can recognize growth in mycelium buckets from DDSS. This is done by computer vision models designed for this task. It is done by clustering and classifiyng the images in days.
+This is the frontend of an application that can recognize growth in mycelium buckets from DDSS. This is done by computer vision models designed for this task. It is done by clustering and classifiyng the images in days.
