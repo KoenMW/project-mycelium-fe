@@ -1,6 +1,10 @@
 <script lang="ts">
   import type { Performance, ShadowColours } from "../core/types";
-  import { calcPerformance, calcPerformanceNumber } from "../core/utils";
+  import {
+    calcPerformance,
+    calcPerformanceNumber,
+    findLatestDayIndex,
+  } from "../core/utils";
   import { filters, sortings } from "../stores/runs";
   import HoverPopup from "./HoverPopup.svelte";
 
@@ -24,7 +28,10 @@
       return;
     }
     filters.update((f) => {
-      f["performance"] = (r) => calcPerformance(r.instances[0]) === performance;
+      f["performance"] = (r) => {
+        const latestIndex = findLatestDayIndex(r);
+        return calcPerformance(r.instances[latestIndex]) === performance;
+      };
       return f;
     });
     selectedPerformanceFilter = performance;
@@ -41,11 +48,13 @@
     }
     sortings.update((s) => {
       s["performance"] = (a, b) => {
+        const latestAIndex = findLatestDayIndex(a);
+        const latestBIndex = findLatestDayIndex(b);
         return direction === "ascending"
-          ? calcPerformanceNumber(b.instances[0]) -
-              calcPerformanceNumber(a.instances[0])
-          : calcPerformanceNumber(a.instances[0]) -
-              calcPerformanceNumber(b.instances[0]);
+          ? calcPerformanceNumber(b.instances[latestBIndex]) -
+              calcPerformanceNumber(a.instances[latestAIndex])
+          : calcPerformanceNumber(a.instances[latestAIndex]) -
+              calcPerformanceNumber(b.instances[latestBIndex]);
       };
       return s;
     });

@@ -21,9 +21,9 @@
 
   const onInput = (searchString: string) => {
     filters.set({
-      searchString: (_, i) => {
+      searchString: (r) => {
         if (!searchString) return true;
-        return i.toString() === searchString;
+        return r.index.toString() === searchString;
       },
     });
   };
