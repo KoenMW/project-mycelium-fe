@@ -194,12 +194,12 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
 
   const xScale = d3
     .scaleLinear()
-    .domain([1, cellCount])
+    .domain([0, cellCount])
     .range([margin, width - margin]);
 
   const yScale = d3
     .scaleLinear()
-    .domain([1, cellCount])
+    .domain([0, cellCount])
     .range([margin, width - margin]);
 
   const cellSize = xScale(1) - xScale(0);
@@ -228,6 +228,32 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
         .tickFormat(d3.format("d"))
         .tickSize(-plotSize)
     );
+
+  // Shift x-axis labels
+  svg.selectAll(".xAxis .tick").each(function (d, i, nodes) {
+    const isLast = i === nodes.length - 1;
+    if (!isLast) {
+      d3.select(this)
+        .select("text")
+        .attr("x", cellSize / 2)
+        .attr("text-anchor", "middle");
+    } else {
+      d3.select(this).select("text").text("");
+    }
+  });
+
+  // Shift y-axis labels
+  svg.selectAll(".yAxis .tick").each(function (_, i, nodes) {
+    const isLast = i === nodes.length - 1;
+    if (!isLast) {
+      d3.select(this)
+        .select("text")
+        .attr("y", cellSize / 2)
+        .attr("dy", "0.35em");
+    } else {
+      d3.select(this).select("text").text("");
+    }
+  });
 
   // Style gridlines
   svg.selectAll(".tick line").attr("stroke", "#ccc");
@@ -261,10 +287,10 @@ export const drawConfusionMatrix = (run: Run, width: number) => {
     .enter()
     .append("rect")
     .attr("x", ({ actualDay: currentDay }) => {
-      return xScale(currentDay + 1);
+      return xScale(currentDay);
     })
     .attr("y", ({ estimatedDay }) => {
-      return yScale(estimatedDay + 1);
+      return yScale(estimatedDay);
     })
     .attr("width", cellSize)
     .attr("height", cellSize)

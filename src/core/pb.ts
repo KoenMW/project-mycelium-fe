@@ -7,16 +7,21 @@ export default class PB {
   private myceliumCollection: RecordService<PBMycelium>;
 
   constructor() {
+    console.log("url:", import.meta.env.VITE_PB_URL);
     const p = new pocketbase(import.meta.env.VITE_PB_URL);
     p.autoCancellation(false);
     this.myceliumCollection = p.collection("mycelium");
 
-    this.getAll().then((r) => {
-      runs.set(r);
-      this.myceliumCollection.subscribe("*", async () => {
-        updateAvailable.set(true);
+    this.getAll()
+      .then((r) => {
+        runs.set(r);
+        this.myceliumCollection.subscribe("*", async () => {
+          updateAvailable.set(true);
+        });
+      })
+      .catch((error) => {
+        console.log("some error happend: ", error);
       });
-    });
   }
 
   public static getInstance(): PB {
