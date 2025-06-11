@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { getFirstPreview } from "../core/utils";
-
   let files: FileList | null = $state(null);
-  let previewUrl = $derived(getFirstPreview(files));
   let uploading = $state(false);
   let uploadMessage = $state("");
-  let trainingData = $state(false); // ✅ toggle state
+  let trainingData = $state(false);
 
   const uploadZip = async () => {
     if (!files) {
@@ -23,7 +20,7 @@
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("zip_file", file);
     formData.append("trainingData", trainingData.toString()); // ✅ send boolean as string
 
     uploading = true;
@@ -56,7 +53,7 @@
     Use as training data
   </label>
 
-  <button on:click={uploadZip} disabled={uploading}>
+  <button onclick={uploadZip} disabled={uploading}>
     {uploading ? "Uploading..." : "Upload ZIP"}
   </button>
 
