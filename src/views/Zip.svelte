@@ -35,8 +35,8 @@
         }
       );
 
-      const text = await response.text();
-      uploadMessage = response.ok ? text : `Upload failed: ${text}`;
+      if (response.ok) uploadMessage = "images uploaded succesfully";
+      else uploadMessage = "failed to upload images";
     } catch (error) {
       console.error(error);
       uploadMessage = "Error uploading ZIP file.";
