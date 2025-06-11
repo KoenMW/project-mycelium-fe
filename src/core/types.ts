@@ -27,3 +27,11 @@ export type FilterType<T> = (r: T, i: number, a: T[]) => boolean;
 export type SortingType<T> = (a: T, b: T) => number;
 
 export type ShadowColours = "green" | "yellow" | "red" | "gray";
+
+export type PredictionResult = {
+  model_version: string;
+  prediction: {
+    confidence: number;
+    predicted_class: number;
+  };
+};

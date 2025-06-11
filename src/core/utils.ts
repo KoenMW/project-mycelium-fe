@@ -64,3 +64,10 @@ export const findLatestDayIndex = (run: Run) => {
 
   return index;
 };
+
+export const getFirstPreview = (files: FileList | null): string => {
+  if (!files) return "";
+  const file = files.item(0);
+  if (!file) return "";
+  return URL.createObjectURL(file);
+};

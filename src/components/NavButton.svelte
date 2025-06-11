@@ -16,6 +16,7 @@
 
 <button
   class="nav-button {!icon && !children && 'warning'}"
+  class:icon
   onclick={() => goTo(route)}
 >
   {#if icon}
@@ -31,11 +32,13 @@
 
 <style>
   .nav-button {
-    border-radius: 100%;
-    aspect-ratio: 1 /1;
-    transition: scale 0.1s ease-in-out;
     background-color: var(--c-black-accent);
     position: relative;
+    color: var(--c-white);
+  }
+
+  .nav-button::before {
+    color: var(--c-black-accent);
   }
 
   .nav-button::before {
@@ -49,16 +52,9 @@
     box-shadow: var(--shadow);
   }
 
-  .nav-button:hover {
-    scale: 0.95;
-  }
-
-  .nav-button:hover::before {
-    opacity: 0;
-  }
-
-  .nav-button:active {
-    scale: 0.9;
+  .icon {
+    aspect-ratio: 1/1;
+    border-radius: 100%;
   }
 
   .warning {

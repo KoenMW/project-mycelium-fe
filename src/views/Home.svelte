@@ -14,6 +14,7 @@
   } from "../core/types";
   import Run from "../components/Run.svelte";
   import RefreshButton from "../components/RefreshButton.svelte";
+  import NavButton from "../components/NavButton.svelte";
 
   const displayRuns = $derived(
     applyMiltipleFiltersAndSortings<RunType>($runs, $filters, $sortings)
@@ -74,6 +75,10 @@
 <section>
   <h1>Active Runs</h1>
   <RefreshButton />
+  <div>
+    <NavButton route="predict">predict</NavButton>
+    <NavButton route="zip">upload data</NavButton>
+  </div>
   <div class="controls">
     <SortAndFilter {shadowColour} />
     <Search {onInput} validChars="0123456789" {shadowColour}>
