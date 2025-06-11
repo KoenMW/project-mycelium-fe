@@ -48,10 +48,6 @@
 
 <div class="shadow">
   <input type="file" accept=".zip" bind:files />
-  <label>
-    <input type="checkbox" bind:checked={trainingData} />
-    Use as training data
-  </label>
 
   <button onclick={uploadZip} disabled={uploading}>
     {uploading ? "Uploading..." : "Upload ZIP"}
